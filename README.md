@@ -1,2 +1,2 @@
 # BlockBuster
-Python powered Arkanoid clone
+Python-powered Arkanoid clone

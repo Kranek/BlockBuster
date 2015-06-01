@@ -103,8 +103,8 @@ font = pygame.font.Font("fonts/Xolonium-Regular.otf", 12)
 def _update(dt):
     global level_number, scoreLabel, livesLabel, levelLabel
     if blockCount <= 0:
-        level_number += 1
-        restartLevel(level_number)
+        # level_number += 1
+        restartLevel(level_number + 1)
     elif player.lives <= 0:
         restartLevel(level_number)
 
@@ -125,7 +125,7 @@ def _update(dt):
 def checkCollision():
     # ball vs paddle
     if ball.rect.y < paddle.rect.y and pygame.sprite.collide_rect(paddle, ball):
-        ball.vy = -1#ball.vy
+        ball.vy = -1  # ball.vy
 
     # ball vs bottom
     if not ball.dead and ball.rect.y + ball.RADIUS * 2 > WINDOW_HEIGHT:
@@ -161,13 +161,13 @@ def restartLevel(newLevelNumber):
     ball.docked = True
     ball.dead = False
 
-    global level, blocks, blockCount
+    global level, level_number, blocks, blockCount
 
     if newLevelNumber > MAX_LEVEL:
         newLevelNumber = 1
 
     if level_number < newLevelNumber:
-        player.score *= player.lives * 500
+        player.score += player.lives * 500
     else:
         player.score = 0
 

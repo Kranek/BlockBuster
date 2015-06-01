@@ -5,7 +5,7 @@ from pygame.locals import *
 
 from Block import Block
 from LevelLoader import LevelLoader
-
+from ImageManager import ImageManager
 from Paddle import Paddle
 from Ball import Ball
 from Player import Player
@@ -14,7 +14,8 @@ from constants import *
 
 pygame.init()
 # pygame.display.init()
-game_icon = pygame.image.load('gfx/game_icon.png')
+ImageManager.loadImages()
+game_icon = ImageManager.gameIcon  # pygame.image.load('gfx/game_icon.png')
 pygame.display.set_caption('BlockBuster')
 pygame.display.set_icon(game_icon)
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -22,8 +23,8 @@ window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
 # TODO: wrap graphics into an object
-background = pygame.image.load('gfx/background.png')
-border = pygame.image.load('gfx/border.png')
+background = ImageManager.background  # pygame.image.load('gfx/background.png')
+border = ImageManager.border  # pygame.image.load('gfx/border.png')
 
 #
 screen = pygame.display.get_surface()
@@ -89,7 +90,7 @@ def loadLevel(newLevelNumber):
                 blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
                 blockCount += 1
 
-level_number = 3
+level_number = 1
 loadLevel(level_number)
 
 player = Player("Derp")

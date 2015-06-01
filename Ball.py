@@ -1,7 +1,6 @@
 import pygame
-from Entity import Entity
 from constants import *
-
+from ImageManager import ImageManager
 
 class Ball(pygame.sprite.Sprite):
     RADIUS = 8
@@ -12,7 +11,7 @@ class Ball(pygame.sprite.Sprite):
         self.vy = 0
         self.RADIUS = Ball.RADIUS
         self.speed = 5
-        self.image = pygame.image.load("gfx/ball.png")
+        self.image = ImageManager.ball  # pygame.image.load("gfx/ball.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

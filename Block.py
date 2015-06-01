@@ -1,5 +1,5 @@
 import pygame
-from Entity import Entity
+from ImageManager import ImageManager
 
 
 class Block(pygame.sprite.Sprite):
@@ -13,7 +13,7 @@ class Block(pygame.sprite.Sprite):
         # self.width = 30
         # self.height = 15
         self.type = 0   # normal brick
-        self.image = pygame.image.load("gfx/brick05.png")
+        self.image = ImageManager.block05  # pygame.image.load("gfx/brick05.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

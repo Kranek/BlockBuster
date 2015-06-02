@@ -6,19 +6,15 @@ class Block(pygame.sprite.Sprite):
     WIDTH = 30
     HEIGHT = 15
 
-    def __init__(self, x, y, item):
+    def __init__(self, x, y, color):
         pygame.sprite.Sprite.__init__(self)
-        # self.x = x
-        # self.y = y
-        # self.width = 30
-        # self.height = 15
-        self.type = 0   # normal brick
-        self.image = ImageManager.block05  # pygame.image.load("gfx/brick05.png")
+        self.type = color
+        self.image = ImageManager.blocks[color]  # pygame.image.load("gfx/brick05.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.dead = False
-        self.item = item
 
-    def update(self):
-        pass
+    def onCollide(self):
+        self.dead = True
+        return 100 + 10 * self.type

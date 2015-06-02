@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 
 from Block import Block
+from BlockIndestructible import BlockIndestructible
 from LevelLoader import LevelLoader
 from ImageManager import ImageManager
 from Paddle import Paddle
@@ -94,8 +95,12 @@ def loadLevel(newLevelNumber):
     for y in xrange(0, BLOCK_NUM_HEIGHT):
         blocks.append([None, ] * BLOCK_NUM_WIDTH)
         for x in xrange(0, BLOCK_NUM_WIDTH):
-            if level[y][x] == 1:
-                blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT, items[y][x])
+            if level[y][x] == 'i':
+                blocks[y][x] = BlockIndestructible(PLAYFIELD_PADDING[0] + x * Block.WIDTH,
+                                                   PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
+            elif level[y][x] != '0':
+                blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT,
+                                     int(level[y][x]) - 1)
                 blockCount += 1
 
 level_number = 1
@@ -157,12 +162,15 @@ def checkCollision():
             # if x >= 0 and y >= 0 and x < BLOCK_NUM_WIDTH and y < BLOCK_NUM_HEIGHT:
             if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
                 if blocks[y][x] is not None and not blocks[y][x].dead and pygame.sprite.collide_rect(blocks[y][x], ball):
-                    blocks[y][x].dead = True
-                    if blocks[y][x].item == 1:
+                    if items[y][x] == 1:
                         entities.append(ItemLife(blocks[y][x].rect.x, blocks[y][x].rect.y))
 
-                    blockCount -= 1
-                    player.score += 100
+                    return_v = blocks[y][x].onCollide()
+
+                    if blocks[y][x].dead:
+                        blockCount -= 1
+                        player.score += return_v
+
                     collNum[y - ballblockY + 1] += collNumVal[x - ballblockX + 1]
 
     ball.onCollide(collNum)
@@ -177,8 +185,6 @@ def checkCollision():
 def start_level(new_level_num):
     ball.docked = True
     ball.dead = False
-
-    global level, level_number, blocks, blockCount
 
     if new_level_num > MAX_LEVEL:
         new_level_num = 1

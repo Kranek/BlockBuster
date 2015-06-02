@@ -8,7 +8,7 @@ class Item(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.speed = 3
+        self.speed = 2
         self.image = ImageManager.item
         self.rect = self.image.get_rect()
         self.rect.x = x

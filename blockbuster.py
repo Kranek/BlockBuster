@@ -1,5 +1,5 @@
 import sys
-import os
+# import os
 import pygame
 from pygame.locals import *
 
@@ -9,6 +9,8 @@ from ImageManager import ImageManager
 from Paddle import Paddle
 from Ball import Ball
 from Player import Player
+from Item import Item
+from ItemLife import ItemLife
 from gameclock import GameClock
 from constants import *
 
@@ -73,26 +75,31 @@ def input(events):
                     ball.docked = False
                     ball.vx = 1
                     ball.vy = -1
+
+            elif event.key == K_EQUALS:
+                start_level(level_number + 1)
         # else:
         #     print event
 
 
 def loadLevel(newLevelNumber):
-    global level, level_number, blocks, blockCount
-    level = LevelLoader.load(LEVELDIR + str(newLevelNumber).zfill(2) + ".lvl")
+    global level, level_number, blocks, blockCount, items, entities
+    loaded_level = LevelLoader.load(LEVELDIR + str(newLevelNumber).zfill(2) + ".lvl")
+    level = loaded_level[0]
+    items = loaded_level[1]
     level_number = newLevelNumber
     blocks = []
+    entities = []
     blockCount = 0
-    for y in xrange(0, 20):
-        blocks.append([None, ] * 20)
-        for x in xrange(0, 20):
+    for y in xrange(0, BLOCK_NUM_HEIGHT):
+        blocks.append([None, ] * BLOCK_NUM_WIDTH)
+        for x in xrange(0, BLOCK_NUM_WIDTH):
             if level[y][x] == 1:
-                blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
+                blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT, items[y][x])
                 blockCount += 1
 
 level_number = 1
 loadLevel(level_number)
-
 player = Player("Derp")
 paddle = Paddle(WINDOW_WIDTH/2 - Block.WIDTH, WINDOW_HEIGHT - 40)
 ball = Ball(paddle.rect.x + paddle.rect.width/2 - Ball.RADIUS, paddle.rect.y - Ball.RADIUS * 2)
@@ -104,9 +111,9 @@ def _update(dt):
     global level_number, scoreLabel, livesLabel, levelLabel
     if blockCount <= 0:
         # level_number += 1
-        restartLevel(level_number + 1)
+        start_level(level_number + 1)
     elif player.lives <= 0:
-        restartLevel(level_number)
+        start_level(level_number)
 
     input(pygame.event.get())
     paddle.update()
@@ -115,6 +122,8 @@ def _update(dt):
         ball.rect.y = paddle.rect.y - Ball.RADIUS * 2
     elif player.lives > 0:
         ball.update()
+    for entity in entities:
+        entity.update()
 
     checkCollision()
     scoreLabel = font.render("SCORE: " + str(player.score), 1, (255, 255, 255))
@@ -141,37 +150,45 @@ def checkCollision():
     # ball vs blocks
     collNum = [0, 0, 0]
     collNumVal = (4, 2, 1)
-    blockNumWidth = (WINDOW_WIDTH - PLAYFIELD_PADDING[0] * 2) / Block.WIDTH
-    blockNumHeight = 20  # (WINDOW_HEIGHT - playfieldPadding[1] * 2) / 15
     ballblockX = (ball.rect.x - PLAYFIELD_PADDING[0] + ball.RADIUS) / Block.WIDTH
     ballblockY = (ball.rect.y - PLAYFIELD_PADDING[1] + ball.RADIUS) / Block.HEIGHT
     for y in range(ballblockY - 1, ballblockY + 2):
         for x in range(ballblockX - 1, ballblockX + 2):
-            if x >= 0 and y >= 0 and x < blockNumWidth and y < blockNumHeight:
+            # if x >= 0 and y >= 0 and x < BLOCK_NUM_WIDTH and y < BLOCK_NUM_HEIGHT:
+            if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
                 if blocks[y][x] is not None and not blocks[y][x].dead and pygame.sprite.collide_rect(blocks[y][x], ball):
                     blocks[y][x].dead = True
+                    if blocks[y][x].item == 1:
+                        entities.append(ItemLife(blocks[y][x].rect.x, blocks[y][x].rect.y))
+
                     blockCount -= 1
                     player.score += 100
                     collNum[y - ballblockY + 1] += collNumVal[x - ballblockX + 1]
 
     ball.onCollide(collNum)
 
+    # paddle vs items
+    for entity in entities:
+        if not entity.dead and isinstance(entity, ItemLife) and pygame.sprite.collide_rect(paddle, entity):
+            entity.dead = True
+            player.lives += 1
 
-def restartLevel(newLevelNumber):
+
+def start_level(new_level_num):
     ball.docked = True
     ball.dead = False
 
     global level, level_number, blocks, blockCount
 
-    if newLevelNumber > MAX_LEVEL:
-        newLevelNumber = 1
+    if new_level_num > MAX_LEVEL:
+        new_level_num = 1
 
-    if level_number < newLevelNumber:
+    if level_number < new_level_num:
         player.score += player.lives * 500
     else:
         player.score = 0
 
-    loadLevel(newLevelNumber)
+    loadLevel(new_level_num)
 
     paddle.rect.x = WINDOW_WIDTH/2 - Block.WIDTH
     paddle.rect.y = WINDOW_HEIGHT - 40
@@ -190,6 +207,13 @@ def _draw(interp):
     screen.blit(paddle.image, (paddle.rect.x, paddle.rect.y))
     if not ball.dead:
         screen.blit(ball.image, (ball.rect.x, ball.rect.y))
+
+    for entity in entities:
+        if not entity.dead:
+            screen.blit(entity.image, (entity.rect.x, entity.rect.y))
+
+    pygame.draw.rect(screen, (0, 0, 0), (PLAYFIELD_PADDING[0], 0, WINDOW_WIDTH - PLAYFIELD_PADDING[0] * 2, PLAYFIELD_PADDING[1]))
+
     screen.blit(scoreLabel, (PLAYFIELD_PADDING[0] + 10, 0))
     screen.blit(livesLabel, (PLAYFIELD_PADDING[0] + 150, 0))
     screen.blit(levelLabel, (WINDOW_WIDTH - 100, 0))

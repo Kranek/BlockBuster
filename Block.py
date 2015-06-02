@@ -6,7 +6,7 @@ class Block(pygame.sprite.Sprite):
     WIDTH = 30
     HEIGHT = 15
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, item):
         pygame.sprite.Sprite.__init__(self)
         # self.x = x
         # self.y = y
@@ -18,9 +18,7 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.dead = False
-
-    # def think(self):
-    #     pass
+        self.item = item
 
     def update(self):
         pass

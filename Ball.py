@@ -39,8 +39,13 @@ class Ball(pygame.sprite.Sprite):
         if collNum[0] == 4 and collNum[1] == 0 and collNum[2] == 0:  # topLeft
             self.vx = 1
             self.vy = 1
-        elif collNum[0] == 2 and collNum[1] == 0 and collNum[2] == 0:  # topMid
+        elif collNum[0] == 2 and collNum[2] == 0:  # topMid...
             self.vy = 1
+            if collNum[1] == 8:  # ...with midLeft
+                self.vx = 1
+            elif collNum[1] == 1:  # ...with midRight
+                self.vx = -1
+
         elif collNum[0] == 1 and collNum[1] == 0 and collNum[2] == 0:  # topRight
             self.vx = -1
             self.vy = 1
@@ -62,7 +67,12 @@ class Ball(pygame.sprite.Sprite):
             self.vy = -1
         elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 2:  # bottomMid
             self.vy = -1
-        elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 4:  # bottomRight
+            if collNum[1] == 8:  # ...with midLeft
+                self.vx = 1
+            elif collNum[1] == 1:  # ...with midRight
+                self.vx = -1
+
+        elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 1:  # bottomRight
             self.vx = -1
             self.vy = -1
         elif collNum[2] == 6:  # bottomLeft and bottomMid...

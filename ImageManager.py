@@ -3,6 +3,7 @@ import pygame
 
 class ImageManager():
     blocks = []
+    blocksM = []
 
     @staticmethod
     def loadImages():
@@ -20,5 +21,12 @@ class ImageManager():
 
         ImageManager.blockI = pygame.image.load("gfx/blockI.png")
 
+        for i in xrange(1, 4):
+            ImageManager.blocksM.append(pygame.image.load("gfx/blockM" + str(i) + "_v2.png"))
+
+        ImageManager.blockE = pygame.image.load("gfx/blockE.png")
+
         ImageManager.item = pygame.image.load("gfx/item.png")
         ImageManager.itemLife = pygame.image.load("gfx/itemLife.png")
+
+        ImageManager.explosion = pygame.image.load("gfx/explosion.png")

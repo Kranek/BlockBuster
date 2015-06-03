@@ -16,5 +16,8 @@ class Block(pygame.sprite.Sprite):
         self.dead = False
 
     def onCollide(self):
+        return self.kill()
+
+    def kill(self):
         self.dead = True
         return 100 + 10 * self.type

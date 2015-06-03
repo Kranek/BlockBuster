@@ -5,6 +5,8 @@ from pygame.locals import *
 
 from Block import Block
 from BlockIndestructible import BlockIndestructible
+from BlockMultiHit import BlockMultiHit
+from BlockExplosive import BlockExplosive
 from LevelLoader import LevelLoader
 from ImageManager import ImageManager
 from Paddle import Paddle
@@ -12,6 +14,7 @@ from Ball import Ball
 from Player import Player
 from Item import Item
 from ItemLife import ItemLife
+from Explosion import Explosion
 from gameclock import GameClock
 from constants import *
 
@@ -25,11 +28,9 @@ window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
 
-# TODO: wrap graphics into an object
 background = ImageManager.background  # pygame.image.load('gfx/background.png')
 border = ImageManager.border  # pygame.image.load('gfx/border.png')
 
-#
 screen = pygame.display.get_surface()
 pygame.display.flip()
 
@@ -98,6 +99,14 @@ def loadLevel(newLevelNumber):
             if level[y][x] == 'i':
                 blocks[y][x] = BlockIndestructible(PLAYFIELD_PADDING[0] + x * Block.WIDTH,
                                                    PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
+            elif level[y][x] == 'm':
+                blocks[y][x] = BlockMultiHit(PLAYFIELD_PADDING[0] + x * Block.WIDTH,
+                                             PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
+                blockCount += 1
+            elif level[y][x] == 'e':
+                blocks[y][x] = BlockExplosive(PLAYFIELD_PADDING[0] + x * Block.WIDTH,
+                                              PLAYFIELD_PADDING[1] + y * Block.HEIGHT)
+                blockCount += 1
             elif level[y][x] != '0':
                 blocks[y][x] = Block(PLAYFIELD_PADDING[0] + x * Block.WIDTH, PLAYFIELD_PADDING[1] + y * Block.HEIGHT,
                                      int(level[y][x]) - 1)
@@ -128,12 +137,29 @@ def _update(dt):
     elif player.lives > 0:
         ball.update()
     for entity in entities:
-        entity.update()
+        if not entity.dead:
+            entity.update()
 
     checkCollision()
     scoreLabel = font.render("SCORE: " + str(player.score), 1, (255, 255, 255))
     livesLabel = font.render("LIVES: " + str(player.lives), 1, (255, 255, 255))
     levelLabel = font.render("LEVEL " + str(level_number), 1, (255, 255, 255))
+
+
+def block_destruction(block, item, func):
+    if item == 1:
+        entities.append(ItemLife(block.rect.x, block.rect.y))
+
+    return_v = func()
+    if isinstance(block, BlockExplosive):
+        rect = block.rect
+        entities.append(Explosion(rect.x + rect.width/2 - Explosion.WIDTH/2,
+                                  rect.y + rect.height/2 - Explosion.HEIGHT/2))
+
+    if block.dead:
+        player.score += return_v
+        global blockCount
+        blockCount -= 1
 
 
 def checkCollision():
@@ -162,24 +188,45 @@ def checkCollision():
             # if x >= 0 and y >= 0 and x < BLOCK_NUM_WIDTH and y < BLOCK_NUM_HEIGHT:
             if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
                 if blocks[y][x] is not None and not blocks[y][x].dead and pygame.sprite.collide_rect(blocks[y][x], ball):
-                    if items[y][x] == 1:
-                        entities.append(ItemLife(blocks[y][x].rect.x, blocks[y][x].rect.y))
-
-                    return_v = blocks[y][x].onCollide()
-
-                    if blocks[y][x].dead:
-                        blockCount -= 1
-                        player.score += return_v
+                    # if items[y][x] == 1:
+                    #     entities.append(ItemLife(blocks[y][x].rect.x, blocks[y][x].rect.y))
+                    #
+                    # return_v = blocks[y][x].onCollide()
+                    # if isinstance(blocks[y][x], BlockExplosive):
+                    #     # for col in xrange(y - 1, y + 2):
+                    #     #     for row in xrange(x - 1, x + 2):
+                    #     #         if blocks[col][row] is not None:
+                    #     #             result = blocks[col][row].kill()
+                    #     #             if blocks[col][row].dead:
+                    #     #                 award_points(player, result)
+                    #     rect = blocks[y][x].rect
+                    #     entities.append(Explosion(rect.x + rect.width/2 - Explosion.WIDTH/2, rect.y + rect.height/2 - Explosion.HEIGHT/2))
+                    #
+                    # if blocks[y][x].dead:
+                    #     award_points(player, return_v)
+                    block_destruction(blocks[y][x], items[y][x], blocks[y][x].onCollide)
 
                     collNum[y - ballblockY + 1] += collNumVal[x - ballblockX + 1]
 
     ball.onCollide(collNum)
 
-    # paddle vs items
+    # entities
     for entity in entities:
-        if not entity.dead and isinstance(entity, ItemLife) and pygame.sprite.collide_rect(paddle, entity):
-            entity.dead = True
-            player.lives += 1
+        if not entity.dead:
+            # paddle vs items
+            if isinstance(entity, ItemLife) and pygame.sprite.collide_rect(paddle, entity):
+                entity.dead = True
+                player.lives += 1
+            # explosion vs blocks
+            elif isinstance(entity, Explosion) and entity.state > 0:
+                entity_block_x = (entity.rect.x - PLAYFIELD_PADDING[0] + Explosion.WIDTH/2) / Block.WIDTH
+                entity_block_y = (entity.rect.y - PLAYFIELD_PADDING[1] + Explosion.HEIGHT/2) / Block.HEIGHT
+                for y in xrange(entity_block_y - 1, entity_block_y + 2):
+                    for x in xrange(entity_block_x - 1, entity_block_x + 2):
+                        if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
+                            if blocks[y][x] is not None and not blocks[y][x].dead:
+                                block_destruction(blocks[y][x], items[y][x], blocks[y][x].kill)
+
 
 
 def start_level(new_level_num):
@@ -216,9 +263,14 @@ def _draw(interp):
 
     for entity in entities:
         if not entity.dead:
-            screen.blit(entity.image, (entity.rect.x, entity.rect.y))
+            if isinstance(entity, Explosion):
+                screen.blit(entity.image, (entity.rect.x, entity.rect.y), (Explosion.WIDTH * entity.state, 0,
+                                                                           Explosion.WIDTH, Explosion.HEIGHT))
+            else:
+                screen.blit(entity.image, (entity.rect.x, entity.rect.y))
 
-    pygame.draw.rect(screen, (0, 0, 0), (PLAYFIELD_PADDING[0], 0, WINDOW_WIDTH - PLAYFIELD_PADDING[0] * 2, PLAYFIELD_PADDING[1]))
+    pygame.draw.rect(screen, (0, 0, 0), (PLAYFIELD_PADDING[0], 0, WINDOW_WIDTH - PLAYFIELD_PADDING[0] * 2,
+                                         PLAYFIELD_PADDING[1]))
 
     screen.blit(scoreLabel, (PLAYFIELD_PADDING[0] + 10, 0))
     screen.blit(livesLabel, (PLAYFIELD_PADDING[0] + 150, 0))

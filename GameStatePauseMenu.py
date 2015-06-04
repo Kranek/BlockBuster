@@ -54,7 +54,7 @@ class GameStatePauseMenu(object):
             overlay.set_alpha(128)
             overlay.fill((0, 0, 0))
             self.overlay_drawn = True
-            self.screen.blit(overlay, (0,0))
+            self.screen.blit(overlay, (0, 0))
 
         o_max_width = max([o.get_rect().width for o in self.menu_options])
         width = o_max_width + MENU_PADDING[0] * 2

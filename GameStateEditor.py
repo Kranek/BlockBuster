@@ -3,13 +3,14 @@ import pygame
 from pygame.locals import *
 from AssetManager import AssetManager
 from Block import Block
-
 from constants import *
 # from GameStateMenu import *
-
+from LevelLoader import LevelLoader
+import tkFileDialog
 
 class GameStateEditor:
     editor_info_padding = (30, WINDOW_HEIGHT - 20)
+    editor_help_top_padding = (30, 0)
 
     def __init__(self, context, screen, prev_state):
         self.context = context
@@ -38,6 +39,8 @@ class GameStateEditor:
         self.font = AssetManager.font
         self.label_current_block_type = self.font.render(
             "Current block:              +/-/mouse wheel to change block type, 0 to reset", 1, (255, 255, 255))
+        self.label_help_top = self.font.render(
+            "Esc - Back to menu, F5 - Save, F9 - Load", 1, (255, 255, 255))
         # print sorted(self.block_types.keys())
 
     def handle_input(self, events):
@@ -85,6 +88,8 @@ class GameStateEditor:
                     self.current_block_type = 0
                 elif event.key == K_F5:
                     self.save()
+                elif event.key == K_F9:
+                    self.open()
             # else:
             #     print event
 
@@ -112,6 +117,7 @@ class GameStateEditor:
                     self.screen.blit(self.block_types[self.blocks[y][x]], (PLAYFIELD_PADDING[0] + x * Block.WIDTH,
                                                                            PLAYFIELD_PADDING[1] + y * Block.HEIGHT))
         self.screen.blit(self.editor_cursor_block, self.position_grid_to_screen(self.editor_cursor_position))
+        self.screen.blit(self.label_help_top, self.editor_help_top_padding)
         self.screen.blit(self.label_current_block_type, self.editor_info_padding)
         self.screen.blit(self.block_types[self.available_block_types[self.current_block_type]],
                          (self.editor_info_padding[0] + 100, self.editor_info_padding[1]))
@@ -149,9 +155,26 @@ class GameStateEditor:
                 data += self.blocks[y][x]
             data += '\n'
         print data
-        # import Tkinter as tk
-        # # from Tkinter import tkFile  #kFileDialog
-        # root = tk.Tk()
-        # root.withdraw()
-        # file_path = root.filedialog.askopenfilename()
+        options = {'defaultextension': '.lvl',
+                   'filetypes': [('Levels', '.lvl'), ('All files', '*')],
+                   'initialdir': 'levels',
+                   'initialfile': '',
+                   'title': 'Save level'}
+        # filename = tkFileDialog.asksaveasfile(**options)
+        filename = tkFileDialog.asksaveasfilename(**options)
+        if filename:
+            with open(filename, "w") as level:
+                level.write(data)
+        # print filename
+        # pass
+
+    def open(self):
+        options = {'defaultextension': '.lvl',
+                   'filetypes': [('Levels', '.lvl'), ('All files', '*')],
+                   'initialdir': 'levels',
+                   'initialfile': '',
+                   'title': 'Open level'}
+        filename = tkFileDialog.askopenfilename(**options)
+        if filename:
+            self.blocks = LevelLoader.load(filename)[0]
         pass

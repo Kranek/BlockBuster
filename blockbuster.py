@@ -5,6 +5,10 @@ from AssetManager import AssetManager
 from gameclock import GameClock
 from constants import *
 from GameStateMenu import GameStateMenu
+import Tkinter as tk
+root = tk.Tk()
+root.withdraw()
+
 
 pygame.init()
 

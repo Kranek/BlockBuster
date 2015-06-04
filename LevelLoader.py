@@ -19,7 +19,6 @@ class LevelLoader:
                 else:
                     items_arr.append(list(int(x) for x in row.strip()))
 
-
         for i in xrange(len(level_arr), BLOCK_NUM_HEIGHT):
             level_arr.append(['0' for x in xrange(0, BLOCK_NUM_WIDTH)])
 

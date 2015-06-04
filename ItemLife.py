@@ -1,7 +1,7 @@
 from Item import Item
-from ImageManager import ImageManager
+from AssetManager import AssetManager
 
 class ItemLife(Item):
     def __init__(self, x, y):
         Item.__init__(self, x, y)
-        self.image = ImageManager.itemLife
+        self.image = AssetManager.itemLife

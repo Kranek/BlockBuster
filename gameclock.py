@@ -437,7 +437,7 @@ if __name__ == '__main__':
 
         def __init__(self):
             pygame.init()
-            self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+            self.screen = pygame.display.set_mode((LEVEL_WIDTH, LEVEL_HEIGHT))
             self.screen_rect = self.screen.get_rect()
             self.black = Color('black')
             self.clock = GameClock(max_ups=30, max_fps=256, update_callback=self._update, frame_callback=self._draw)

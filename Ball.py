@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from ImageManager import ImageManager
+from AssetManager import AssetManager
 
 class Ball(pygame.sprite.Sprite):
     RADIUS = 8
@@ -11,7 +11,7 @@ class Ball(pygame.sprite.Sprite):
         self.vy = 0
         self.RADIUS = Ball.RADIUS
         self.speed = 5
-        self.image = ImageManager.ball  # pygame.image.load("gfx/ball.png")
+        self.image = AssetManager.ball  # pygame.image.load("gfx/ball.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -25,10 +25,10 @@ class Ball(pygame.sprite.Sprite):
     def update(self):
         if self.rect.y < PLAYFIELD_PADDING[1]:
             self.vy = -self.vy
-        if self.rect.x < PLAYFIELD_PADDING[1] or self.rect.x + self.RADIUS * 2 > WINDOW_WIDTH - PLAYFIELD_PADDING[0]:
+        if self.rect.x < PLAYFIELD_PADDING[1] or self.rect.x + self.RADIUS * 2 > LEVEL_WIDTH - PLAYFIELD_PADDING[0]:
             self.vx = -self.vx
 
-        if self.rect.y + self.RADIUS * 2 > WINDOW_HEIGHT:
+        if self.rect.y + self.RADIUS * 2 > LEVEL_HEIGHT:
             self.vx = 0
             self.vy = 0
 

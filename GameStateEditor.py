@@ -1,12 +1,13 @@
 import sys
-import pygame
+# import pygame
 from pygame.locals import *
-from AssetManager import AssetManager
-from Block import Block
+from gamedata import Assets
+from blocks import Block
 from constants import *
 # from GameStateMenu import *
 from LevelLoader import LevelLoader
 import tkFileDialog
+
 
 class GameStateEditor:
     editor_info_padding = (30, WINDOW_HEIGHT - 20)
@@ -16,27 +17,27 @@ class GameStateEditor:
         self.context = context
         self.screen = screen
         self.prev_state = prev_state
-        self.background = AssetManager.background
-        self.border = AssetManager.border
+        self.background = Assets.background
+        self.border = Assets.border
         self.blocks = []
         self.block_types = dict()
-        for i in xrange(0, len(AssetManager.blocks)):
-            self.block_types[str(i + 1)] = AssetManager.blocks[i]
-        self.block_types['e'] = AssetManager.blockE
-        self.block_types['i'] = AssetManager.blockI
-        self.block_types['m'] = AssetManager.blocksM[len(AssetManager.blocksM) - 1]
+        for i in xrange(0, len(Assets.blocks)):
+            self.block_types[str(i + 1)] = Assets.blocks[i]
+        self.block_types['e'] = Assets.blockE
+        self.block_types['i'] = Assets.blockI
+        self.block_types['m'] = Assets.blocksM[len(Assets.blocksM) - 1]
         # self.block_types['0'] = AssetManager.editor_cursor_block
         self.available_block_types = sorted(self.block_types.keys())
         # self.available_block_types.append('0')
         for y in xrange(0, BLOCK_NUM_HEIGHT):
             self.blocks.append(['0', ] * BLOCK_NUM_WIDTH)
             # for x in xrange(0, BLOCK_NUM_WIDTH):
-        self.editor_cursor_block = AssetManager.editor_cursor_block
+        self.editor_cursor_block = Assets.editor_cursor_block
         self.editor_cursor_position = (0, 0)
         self.current_block_type = 0
         self.mode_paint = False
         self.mode_erase = False
-        self.font = AssetManager.font
+        self.font = Assets.font
         self.label_current_block_type = self.font.render(
             "Current block:              +/-/mouse wheel to change block type, 0 to reset", 1, (255, 255, 255))
         self.label_help_top = self.font.render(

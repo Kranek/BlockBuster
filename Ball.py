@@ -1,6 +1,6 @@
-import pygame
 from constants import *
-from AssetManager import AssetManager
+from gamedata import Assets
+import pygame
 
 class Ball(pygame.sprite.Sprite):
     RADIUS = 8
@@ -11,7 +11,7 @@ class Ball(pygame.sprite.Sprite):
         self.vy = 0
         self.RADIUS = Ball.RADIUS
         self.speed = 5
-        self.image = AssetManager.ball  # pygame.image.load("gfx/ball.png")
+        self.image = Assets.ball  # pygame.image.load("gfx/ball.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -19,8 +19,8 @@ class Ball(pygame.sprite.Sprite):
         self.docked = True
         self.dead = False
 
-    # def think(self):
-    #     pass
+    def draw(self, screen, offset=(0, 0)):
+        screen.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
 
     def update(self):
         if self.rect.y < PLAYFIELD_PADDING[1]:
@@ -35,69 +35,69 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x += self.vx * self.speed
         self.rect.y += self.vy * self.speed
 
-    def onCollide(self, collNum):
-        if collNum[0] == 4 and collNum[1] == 0 and collNum[2] == 0:  # topLeft
+    def on_collide(self, coll_num):
+        if coll_num[0] == 4 and coll_num[1] == 0 and coll_num[2] == 0:  # topLeft
             self.vx = 1
             self.vy = 1
-        elif collNum[0] == 2 and collNum[2] == 0:  # topMid...
+        elif coll_num[0] == 2 and coll_num[2] == 0:  # topMid...
             self.vy = 1
-            if collNum[1] == 4:  # ...with midLeft
+            if coll_num[1] == 4:  # ...with midLeft
                 self.vx = 1
-            elif collNum[1] == 1:  # ...with midRight
+            elif coll_num[1] == 1:  # ...with midRight
                 self.vx = -1
 
-        elif collNum[0] == 1 and collNum[1] == 0 and collNum[2] == 0:  # topRight
+        elif coll_num[0] == 1 and coll_num[1] == 0 and coll_num[2] == 0:  # topRight
             self.vx = -1
             self.vy = 1
-        elif collNum[0] == 6:  # topLeft and topMid...
-            if collNum[1] == 0:  # only what above
+        elif coll_num[0] == 6:  # topLeft and topMid...
+            if coll_num[1] == 0:  # only what above
                 self.vy = 1
-            elif collNum[1] == 4:  # ...with midLeft
+            elif coll_num[1] == 4:  # ...with midLeft
                 self.vx = 1
                 self.vy = 1
-        elif collNum[0] == 3:  # topMid and topRight...
-            if collNum[1] == 0:  # only what above
+        elif coll_num[0] == 3:  # topMid and topRight...
+            if coll_num[1] == 0:  # only what above
                 self.vy = 1
-            elif collNum[1] == 1:  # with midRight
+            elif coll_num[1] == 1:  # with midRight
                 self.vx = -1
                 self.vy = 1
 
-        elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 4:  # bottomLeft
+        elif coll_num[0] == 0 and coll_num[1] == 0 and coll_num[2] == 4:  # bottomLeft
             self.vx = 1
             self.vy = -1
-        elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 2:  # bottomMid
+        elif coll_num[0] == 0 and coll_num[1] == 0 and coll_num[2] == 2:  # bottomMid
             self.vy = -1
-            if collNum[1] == 4:  # ...with midLeft
+            if coll_num[1] == 4:  # ...with midLeft
                 self.vx = 1
-            elif collNum[1] == 1:  # ...with midRight
+            elif coll_num[1] == 1:  # ...with midRight
                 self.vx = -1
 
-        elif collNum[0] == 0 and collNum[1] == 0 and collNum[2] == 1:  # bottomRight
+        elif coll_num[0] == 0 and coll_num[1] == 0 and coll_num[2] == 1:  # bottomRight
             self.vx = -1
             self.vy = -1
-        elif collNum[2] == 6:  # bottomLeft and bottomMid...
-            if collNum[1] == 0:  # only what above
+        elif coll_num[2] == 6:  # bottomLeft and bottomMid...
+            if coll_num[1] == 0:  # only what above
                 self.vy = -1
-            elif collNum[1] == 4:  # ...with midLeft
+            elif coll_num[1] == 4:  # ...with midLeft
                 self.vx = 1
                 self.vy = -1
-        elif collNum[2] == 3:  # bottomMid and bottomRight...
-            if collNum[1] == 0:  # only what above
+        elif coll_num[2] == 3:  # bottomMid and bottomRight...
+            if coll_num[1] == 0:  # only what above
                 self.vy = -1
-            elif collNum[1] == 1:  # with midRight
+            elif coll_num[1] == 1:  # with midRight
                 self.vx = -1
                 self.vy = -1
 
-        elif collNum[0] == 0 and collNum[1] == 4 and collNum[2] == 0:  # leftMid
+        elif coll_num[0] == 0 and coll_num[1] == 4 and coll_num[2] == 0:  # leftMid
             self.vx = 1
-        elif collNum[0] == 4 and collNum[1] == 4 and collNum[2] == 0:  # leftTop and leftMid
+        elif coll_num[0] == 4 and coll_num[1] == 4 and coll_num[2] == 0:  # leftTop and leftMid
             self.vx = 1
-        elif collNum[0] == 0 and collNum[1] == 4 and collNum[2] == 4:  # leftMid and leftBottom
+        elif coll_num[0] == 0 and coll_num[1] == 4 and coll_num[2] == 4:  # leftMid and leftBottom
             self.vx = 1
 
-        elif collNum[0] == 0 and collNum[1] == 1 and collNum[2] == 0:  # rightMid
+        elif coll_num[0] == 0 and coll_num[1] == 1 and coll_num[2] == 0:  # rightMid
             self.vx = -1
-        elif collNum[0] == 1 and collNum[1] == 1 and collNum[2] == 0:  # rightTop and rightMid
+        elif coll_num[0] == 1 and coll_num[1] == 1 and coll_num[2] == 0:  # rightTop and rightMid
             self.vx = -1
-        elif collNum[0] == 0 and collNum[1] == 1 and collNum[2] == 1:  # rightMid and rightBottom
+        elif coll_num[0] == 0 and coll_num[1] == 1 and coll_num[2] == 1:  # rightMid and rightBottom
             self.vx = -1

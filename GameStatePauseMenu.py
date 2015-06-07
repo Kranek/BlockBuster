@@ -1,7 +1,7 @@
 import sys
 import pygame
 from pygame.locals import *
-from AssetManager import AssetManager
+from gamedata import Assets
 from constants import *
 
 
@@ -12,7 +12,7 @@ class GameStatePauseMenu(object):
         self.screen = screen
         self.menu_option = 0
         self.menu_options = []
-        self.font = AssetManager.menu_font
+        self.font = Assets.menu_font
         self.menu_options.append(self.font.render("RESUME GAME", 1, (255, 255, 255)))
         self.menu_options.append(self.font.render("RESTART LEVEL", 1, (255, 255, 255)))
         self.menu_options.append(self.font.render("EXIT TO MENU", 1, (255, 255, 255)))

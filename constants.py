@@ -1,5 +1,5 @@
 import glob
-import pygame
+from pygame import Color
 
 LEVEL_WIDTH = 640
 LEVEL_HEIGHT = 480
@@ -21,6 +21,9 @@ MB_RIGHT = 3
 MB_WHEEL_UP = 4
 MB_WHEEL_DOWN = 5
 
+PADDLE_HEIGHT = 15
+PADDLE_WIDTHS = [40, 60, 80, 120]
+PADDLE_DEFAULT_WIDTH_INDEX = 1
 
-MENU_COLORS = (pygame.Color("#152642"), pygame.Color("#254373"))
+MENU_COLORS = (Color("#152642"), Color("#254373"))
 MENU_PADDING = (10, 10)

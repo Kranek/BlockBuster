@@ -123,9 +123,7 @@ other Python-based multi-media and game development libraries.
 __version__ = '$Id: gameclock.py 428 2013-08-28 05:43:47Z stabbingfinger@gmail.com $'
 __author__ = 'Gummbum, (c) 2011-2014'
 
-
 __all__ = ['GameClock']
-
 
 import functools
 import time
@@ -147,8 +145,8 @@ class _IntervalItem(object):
         _IntervalItem.id += 1
 
 
+# noinspection PyAttributeOutsideInit,PyPep8,PyPep8Naming,PyShadowingBuiltins
 class GameClock(object):
-
     def __init__(self, max_ups=30, max_fps=0, use_wait=False, time_source=time.time, update_callback=None,
                  frame_callback=None, paused_callback=None):
 
@@ -266,8 +264,8 @@ class GameClock(object):
             if self.update_callback:
                 self._update_ready = True
         if real_time - self._last_frame >= self._update_interval or (
-                real_time + self.cost_of_frame < self._next_update and
-                real_time >= self._next_frame):
+                            real_time + self.cost_of_frame < self._next_update and
+                        real_time >= self._next_frame):
             self.dt_frame = real_time - self._last_frame
             self._last_frame = real_time
             self._next_frame = real_time + self._frame_interval
@@ -339,7 +337,7 @@ class GameClock(object):
         self._paused = 0
         self._real_time = real_time
 
-    def schedule_interval(self, func, interval, life=0, args=[]):
+    def schedule_interval(self, func, interval, life=0, args=None):
         """Schedule an item to be called back each time an interval elapses.
 
         While the clock is paused time does not pass.
@@ -354,6 +352,8 @@ class GameClock(object):
                 sequence, like so: item.func(*[item.interval]+item.args).
 
         """
+        if not args:
+            args = []
         # self.unschedule(func)
         item = _IntervalItem(
             func, interval, self.get_ticks(), life, [interval] + list(args))
@@ -433,6 +433,7 @@ if __name__ == '__main__':
     import pygame
     from pygame.locals import *
 
+    # noinspection PyUnusedLocal
     class Game(object):
 
         def __init__(self):

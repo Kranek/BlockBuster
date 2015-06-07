@@ -1,7 +1,8 @@
 from constants import *
 
-class LevelLoader:
 
+# noinspection PyUnusedLocal
+class LevelLoader:
     def __init__(self):
         pass
 
@@ -25,4 +26,4 @@ class LevelLoader:
         for i in xrange(len(items_arr), BLOCK_NUM_HEIGHT):
             items_arr.append([0 for x in xrange(0, BLOCK_NUM_WIDTH)])
 
-        return (level_arr, items_arr)
+        return level_arr, items_arr

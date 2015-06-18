@@ -1,3 +1,6 @@
+"""
+Constants used in the BlockBuster
+"""
 import glob
 from pygame import Color
 
@@ -10,7 +13,7 @@ WINDOW_HEIGHT = 480
 PLAYFIELD_PADDING = (20, 20)
 LEVELDIR = "levels/"
 
-MAX_LEVEL = len(glob.glob1(LEVELDIR, "*.lvl"))
+MAX_LEVEL = len(glob.glob1(LEVELDIR, "*.lvl"))  # FIXME: make it refresh, at least on level save
 
 BLOCK_NUM_WIDTH = 20
 BLOCK_NUM_HEIGHT = 20
@@ -22,7 +25,7 @@ MB_WHEEL_UP = 4
 MB_WHEEL_DOWN = 5
 
 PADDLE_HEIGHT = 15
-PADDLE_WIDTHS = [40, 60, 80, 120]
+PADDLE_WIDTHS = [40, 60, 120, 180]
 PADDLE_DEFAULT_WIDTH_INDEX = 1
 
 MENU_COLORS = (Color("#152642"), Color("#254373"))

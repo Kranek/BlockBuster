@@ -1,15 +1,27 @@
-from constants import *
+"""
+This file contains ball (and later, it might also contain other variants of it)
+"""
+from constants import LEVEL_WIDTH, LEVEL_HEIGHT, PLAYFIELD_PADDING
 from gamedata import Assets
 import pygame
 
 class Ball(pygame.sprite.Sprite):
+    """
+    Basic ball. Bounces off the bricks on hit and damages them.
+    """
     RADIUS = 8
 
     def __init__(self, x, y):
+        """
+        Init ball with the spawn position
+        :param x: x coordinate of the play-field
+        :param y: y coordinate of the play-field
+        :return:
+        """
         pygame.sprite.Sprite.__init__(self)
         self.vx = 0
         self.vy = 0
-        self.RADIUS = Ball.RADIUS
+        self.radius = Ball.RADIUS
         self.speed = 5
         self.image = Assets.ball  # pygame.image.load("gfx/ball.png")
         self.rect = self.image.get_rect()
@@ -20,15 +32,26 @@ class Ball(pygame.sprite.Sprite):
         self.dead = False
 
     def draw(self, screen, offset=(0, 0)):
+        """
+        Method called each frame to (re)draw the object
+        :param screen: PyGame surface to draw the object on
+        :param offset: Needed if you want to draw at different position than default (0, 0)
+        :return:
+        """
         screen.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
 
     def update(self):
+        """
+        Method called each frame, to update the state of the ball
+        :return:
+        """
         if self.rect.y < PLAYFIELD_PADDING[1]:
             self.vy = -self.vy
-        if self.rect.x < PLAYFIELD_PADDING[1] or self.rect.x + self.RADIUS * 2 > LEVEL_WIDTH - PLAYFIELD_PADDING[0]:
+        if self.rect.x < PLAYFIELD_PADDING[1] or \
+           self.rect.x + self.radius * 2 > LEVEL_WIDTH - PLAYFIELD_PADDING[0]:
             self.vx = -self.vx
 
-        if self.rect.y + self.RADIUS * 2 > LEVEL_HEIGHT:
+        if self.rect.y + self.radius * 2 > LEVEL_HEIGHT:
             self.vx = 0
             self.vy = 0
 
@@ -36,6 +59,15 @@ class Ball(pygame.sprite.Sprite):
         self.rect.y += self.vy * self.speed
 
     def on_collide(self, coll_num):
+        """
+        Mirrors the ball vector components appropriately, with way too many branches.
+        Refactor/upgrade required!
+        :param coll_num: A complex one: each row of 3x3 block area near the ball is converted
+        into a decimal representation of the binary representation of its occupancy, eg.
+        [[1,1,0], [1,0,0], [0,0,0]] will be [6, 4, 0] and it will mean that the top-left,
+        top-center and center-left blocks exist near the ball's current location
+        :return:
+        """
         if coll_num[0] == 4 and coll_num[1] == 0 and coll_num[2] == 0:  # topLeft
             self.vx = 1
             self.vy = 1

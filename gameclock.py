@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#pylint: skip-file
 # This file is part of GameClock.
 #
 # GameClock is free software: you can redistribute it and/or modify it
@@ -127,7 +127,7 @@ __all__ = ['GameClock']
 
 import functools
 import time
-from constants import *
+from constants import LEVEL_WIDTH, LEVEL_HEIGHT
 
 
 class _IntervalItem(object):

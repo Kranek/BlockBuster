@@ -1,8 +1,18 @@
+"""
+This file contains Assets used in the game
+"""
 import pygame
 
 
 class Assets(object):
+    """
+    This class contains assets used in the game (as a static fields), and a method to load them once
+    """
     def __init__(self):
+        """
+        Dummy
+        :return:
+        """
         pass
 
     gameIcon = None
@@ -29,6 +39,10 @@ class Assets(object):
 
     @staticmethod
     def load_images():
+        """
+        Loads images (hopefully once)
+        :return:
+        """
         Assets.gameIcon = pygame.image.load('gfx/game_icon.png')
         Assets.background = pygame.image.load('gfx/background.png')
         Assets.border = pygame.image.load('gfx/border.png')
@@ -62,3 +76,10 @@ class Assets(object):
         Assets.font = pygame.font.Font("fonts/Xolonium-Regular.otf", 12)
         Assets.menu_font = pygame.font.Font("fonts/Xolonium-Regular.otf", 32)
         Assets.title_font = pygame.font.Font("fonts/Xolonium-Regular.otf", 72)
+
+    def dummy(self):
+        """
+        I hate PyLint
+        :return:
+        """
+        pass

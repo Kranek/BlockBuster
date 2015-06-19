@@ -13,7 +13,7 @@ from ball import Ball
 from blocks import Block, BlockExplosive, BlockIndestructible, BlockMultiHit
 from projectiles import Projectile
 from items import Item, ItemLife, ItemExpand, ItemLaserGun, ItemShrink, ItemPaddleNano
-from Explosion import Explosion
+from explosion import Explosion
 from constants import LEVEL_WIDTH, LEVEL_HEIGHT, LEVELDIR, BLOCK_NUM_WIDTH, BLOCK_NUM_HEIGHT,\
     PLAYFIELD_PADDING, MAX_LEVEL, PADDLE_WIDTHS, PADDLE_DEFAULT_WIDTH_INDEX
 from GameStatePauseMenu import GameStatePauseMenu

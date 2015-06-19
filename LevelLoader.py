@@ -35,7 +35,7 @@ class LevelLoader(object):
         for _ in xrange(len(items_arr), BLOCK_NUM_HEIGHT):
             items_arr.append([0 for _ in xrange(0, BLOCK_NUM_WIDTH)])
 
-        return level_arr,
+        return level_arr, items_arr
 
     @staticmethod
     def dummy():

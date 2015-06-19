@@ -1,11 +1,12 @@
 """
 This file contains an explosion effect class, used in the game.
 """
-from pygame import Rect, sprite
+from pygame import Rect
+from pygame.sprite import Sprite
 from gamedata import Assets
 
 
-class Explosion(sprite.Sprite):
+class Explosion(Sprite):
     """
     The explosion effect appears on explosive block hit. When the explosion ends, the object is
     marked as dead(and ready to recycle if needed)
@@ -25,7 +26,7 @@ class Explosion(sprite.Sprite):
         :param y: y coordinate of the play-field
         :return:
         """
-        sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.image = Assets.explosion
         self.rect = self.image.get_rect()
         self.rect.x = x

@@ -125,8 +125,8 @@ __author__ = 'Gummbum, (c) 2011-2014'
 
 __all__ = ['GameClock']
 
-import functools
-import time
+from functools import reduce
+from time import sleep, time
 from constants import LEVEL_WIDTH, LEVEL_HEIGHT
 
 
@@ -147,7 +147,7 @@ class _IntervalItem(object):
 
 # noinspection PyAttributeOutsideInit,PyPep8,PyPep8Naming,PyShadowingBuiltins
 class GameClock(object):
-    def __init__(self, max_ups=30, max_fps=0, use_wait=False, time_source=time.time, update_callback=None,
+    def __init__(self, max_ups=30, max_fps=0, use_wait=False, time_source=time, update_callback=None,
                  frame_callback=None, paused_callback=None):
 
         # Configurables.
@@ -307,11 +307,11 @@ class GameClock(object):
             ]
             if sched_due != 0:
                 upcoming_events.append(sched_due)
-            next_due = functools.reduce(min, upcoming_events)
+            next_due = reduce(min, upcoming_events)
             t = self.get_ticks()
             time_to_sleep = next_due - t
             if time_to_sleep >= 0.002:
-                time.sleep(time_to_sleep)
+                sleep(time_to_sleep)
 
     def pause(self):
         """Pause the clock so that time does not elapse.

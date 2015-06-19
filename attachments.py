@@ -2,7 +2,7 @@
 This file contains Paddle Attachments and their parts
 """
 from constants import PADDLE_HEIGHT
-import pygame
+from pygame.transform import flip
 from gamedata import Assets
 from projectiles import Projectile
 
@@ -69,7 +69,7 @@ class AttachmentPart(object):
         Utility method to get the part with mirrored image and attachment points
         :return: Mirrored AttachmentPart object
         """
-        mirrored_image = pygame.transform.flip(self.image, True, False)
+        mirrored_image = flip(self.image, True, False)
         mirrored_point = (abs(self.width - self.attachment_point[0]), self.attachment_point[1])
         return AttachmentPart(mirrored_image, mirrored_point)
 

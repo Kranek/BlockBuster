@@ -1,7 +1,7 @@
 """
 This file contains Assets used in the game
 """
-import pygame
+from pygame import image, font
 
 
 class Assets(object):
@@ -43,39 +43,39 @@ class Assets(object):
         Loads images (hopefully once)
         :return:
         """
-        Assets.gameIcon = pygame.image.load('gfx/game_icon.png')
-        Assets.background = pygame.image.load('gfx/background.png')
-        Assets.border = pygame.image.load('gfx/border.png')
-        Assets.paddles.append(pygame.image.load("gfx/paddle_b.png"))
-        Assets.paddles.append(pygame.image.load("gfx/paddle_r.png"))
-        Assets.ball = pygame.image.load("gfx/ball.png")
+        Assets.gameIcon = image.load('gfx/game_icon.png')
+        Assets.background = image.load('gfx/background.png')
+        Assets.border = image.load('gfx/border.png')
+        Assets.paddles.append(image.load("gfx/paddle_b.png"))
+        Assets.paddles.append(image.load("gfx/paddle_r.png"))
+        Assets.ball = image.load("gfx/ball.png")
 
         for i in xrange(1, 7):
-            Assets.blocks.append(pygame.image.load("gfx/block" + str(i) + ".png"))
+            Assets.blocks.append(image.load("gfx/block" + str(i) + ".png"))
 
-        Assets.blockI = pygame.image.load("gfx/blockI.png")
+        Assets.blockI = image.load("gfx/blockI.png")
 
         for i in xrange(0, 3):
-            Assets.blocksM.append(pygame.image.load("gfx/blockM" + str(1+(i*2)) + "_v2.png"))
+            Assets.blocksM.append(image.load("gfx/blockM" + str(1+(i*2)) + "_v2.png"))
 
-        Assets.blockE = pygame.image.load("gfx/blockE.png")
+        Assets.blockE = image.load("gfx/blockE.png")
 
-        Assets.item = pygame.image.load("gfx/item.png")
-        Assets.itemLife = pygame.image.load("gfx/itemLife.png")
-        Assets.itemLaserGun = pygame.image.load("gfx/itemLaserGun.png")
-        Assets.itemExpand = pygame.image.load("gfx/itemExpand.png")
-        Assets.itemShrink = pygame.image.load("gfx/itemShrink.png")
-        Assets.itemNano = pygame.image.load("gfx/itemNano.png")
+        Assets.item = image.load("gfx/item.png")
+        Assets.itemLife = image.load("gfx/itemLife.png")
+        Assets.itemLaserGun = image.load("gfx/itemLaserGun.png")
+        Assets.itemExpand = image.load("gfx/itemExpand.png")
+        Assets.itemShrink = image.load("gfx/itemShrink.png")
+        Assets.itemNano = image.load("gfx/itemNano.png")
 
-        Assets.explosion = pygame.image.load("gfx/explosion.png")
-        Assets.editor_cursor_block = pygame.image.load("gfx/editor_cursor_block.png")
+        Assets.explosion = image.load("gfx/explosion.png")
+        Assets.editor_cursor_block = image.load("gfx/editor_cursor_block.png")
 
-        Assets.lasergun_attachment = pygame.image.load("gfx/lasergun_attachment.png")
-        Assets.projectile_laser = pygame.image.load("gfx/projectile_laser.png")
+        Assets.lasergun_attachment = image.load("gfx/lasergun_attachment.png")
+        Assets.projectile_laser = image.load("gfx/projectile_laser.png")
 
-        Assets.font = pygame.font.Font("fonts/Xolonium-Regular.otf", 12)
-        Assets.menu_font = pygame.font.Font("fonts/Xolonium-Regular.otf", 32)
-        Assets.title_font = pygame.font.Font("fonts/Xolonium-Regular.otf", 72)
+        Assets.font = font.Font("fonts/Xolonium-Regular.otf", 12)
+        Assets.menu_font = font.Font("fonts/Xolonium-Regular.otf", 32)
+        Assets.title_font = font.Font("fonts/Xolonium-Regular.otf", 72)
 
     def dummy(self):
         """

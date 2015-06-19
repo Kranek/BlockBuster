@@ -1,7 +1,7 @@
 """
 This file contains Level Editor GameState
 """
-import sys
+from sys import exit
 # import pygame
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP, KEYDOWN, K_ESCAPE,\
     K_MINUS, K_KP_MINUS, K_EQUALS, K_KP_PLUS, K_0, K_KP0, K_F5, K_F9
@@ -11,7 +11,7 @@ from constants import WINDOW_HEIGHT, BLOCK_NUM_WIDTH, BLOCK_NUM_HEIGHT, MB_LEFT,
     MB_WHEEL_UP, MB_WHEEL_DOWN, LEVEL_WIDTH, PLAYFIELD_PADDING
 # from GameStateMenu import *
 from LevelLoader import LevelLoader
-import tkFileDialog
+from tkFileDialog import askopenfilename, asksaveasfilename
 
 
 class GameStateEditor(object):
@@ -71,7 +71,7 @@ class GameStateEditor(object):
         """
         for event in events:
             if event.type == QUIT:
-                sys.exit(0)
+                exit(0)
 
             elif event.type == MOUSEMOTION:
                 if self.is_in_bounds(event.pos):
@@ -235,7 +235,7 @@ class GameStateEditor(object):
                    'initialfile': '',
                    'title': 'Save level'}
         # filename = tkFileDialog.asksaveasfile(**options)
-        filename = tkFileDialog.asksaveasfilename(**options)
+        filename = asksaveasfilename(**options)
         if filename:
             with open(filename, "w") as level:
                 level.write(data)
@@ -250,6 +250,6 @@ class GameStateEditor(object):
                    'initialdir': 'levels',
                    'initialfile': '',
                    'title': 'Open level'}
-        filename = tkFileDialog.askopenfilename(**options)
+        filename = askopenfilename(**options)
         if filename:
             self.blocks = LevelLoader.load(filename)[0]

@@ -3,7 +3,9 @@ The main file of the BlockBuster. Run it to play and have fun!
 """
 from gamedata import Assets
 from gameclock import GameClock
-import pygame
+from pygame import init
+from pygame.display import set_caption, set_icon, set_mode, get_surface, flip
+from pygame.event import get
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT
 from GameStateMenu import GameStateMenu
 import Tkinter as Tk
@@ -12,16 +14,16 @@ if __name__ == '__main__':
     ROOT = Tk.Tk()
     ROOT.withdraw()
 
-    pygame.init()
+    init()
 
     Assets.load_images()
     GAME_ICON = Assets.gameIcon
-    pygame.display.set_caption('BlockBuster')
-    pygame.display.set_icon(GAME_ICON)
-    WINDOW = pygame.display.set_mode((WINDOW_WIDTH/2, WINDOW_HEIGHT))
+    set_caption('BlockBuster')
+    set_icon(GAME_ICON)
+    WINDOW = set_mode((WINDOW_WIDTH/2, WINDOW_HEIGHT))
 
-    SCREEN = pygame.display.get_surface()
-    pygame.display.flip()
+    SCREEN = get_surface()
+    flip()
 
     CONTEXT = dict()
     GAMESTATE = GameStateMenu(CONTEXT, SCREEN)
@@ -34,7 +36,7 @@ if __name__ == '__main__':
         :param _: unused dt provided by GameClock
         :return:
         """
-        events = pygame.event.get()
+        events = get()
         CONTEXT["gamestate"].handle_input(events)
         CONTEXT["gamestate"].update()
         # gamestate.handle_input(events)
@@ -50,7 +52,7 @@ if __name__ == '__main__':
         """
         # gamestate.draw()
         CONTEXT["gamestate"].draw()
-        pygame.display.flip()
+        flip()
 
     CLOCK = GameClock(max_ups=60, max_fps=60, update_callback=_update, frame_callback=_draw)
 

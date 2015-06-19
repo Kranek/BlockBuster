@@ -3,9 +3,10 @@ This file contains ball (and later, it might also contain other variants of it)
 """
 from constants import LEVEL_WIDTH, LEVEL_HEIGHT, PLAYFIELD_PADDING
 from gamedata import Assets
-import pygame
+from pygame.sprite import Sprite
+from pygame.mask import from_surface
 
-class Ball(pygame.sprite.Sprite):
+class Ball(Sprite):
     """
     Basic ball. Bounces off the bricks on hit and damages them.
     """
@@ -18,7 +19,7 @@ class Ball(pygame.sprite.Sprite):
         :param y: y coordinate of the play-field
         :return:
         """
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.vx = 0
         self.vy = 0
         self.radius = Ball.RADIUS
@@ -27,7 +28,7 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = from_surface(self.image)
         self.docked = True
         self.dead = False
 

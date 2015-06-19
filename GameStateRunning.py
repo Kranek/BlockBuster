@@ -1,8 +1,8 @@
 """
 This file contains the Running GameState
 """
-import sys
-import pygame
+from sys import exit
+from pygame import sprite, draw
 from pygame.locals import QUIT, KEYDOWN, KEYUP, K_ESCAPE, K_SPACE, K_1, K_2, K_3, K_4, \
     K_EQUALS
 from gamedata import Assets
@@ -67,7 +67,7 @@ class GameStateRunning(object):
         """
         for event in events:
             if event.type == QUIT:
-                sys.exit(0)
+                exit(0)
             elif event.type == KEYDOWN:
                 if event.key == self.control_set[0]:
                     if self.paddle.vx != 0:
@@ -253,7 +253,7 @@ class GameStateRunning(object):
                 entity.draw(self.screen, self.draw_offset)
 
         # draw upper bar
-        pygame.draw.rect(self.screen, (0, 0, 0),
+        draw.rect(self.screen, (0, 0, 0),
                          (self.draw_offset[0] + PLAYFIELD_PADDING[0], self.draw_offset[1],
                           LEVEL_WIDTH - PLAYFIELD_PADDING[0] * 2, PLAYFIELD_PADDING[1]))
 
@@ -297,7 +297,7 @@ class GameStateRunning(object):
         """
         # ball vs paddle
         if self.ball.rect.y < self.paddle.rect.y and \
-                pygame.sprite.collide_rect(self.paddle, self.ball):
+                sprite.collide_rect(self.paddle, self.ball):
             self.ball.vy = -1  # ball.vy
 
         # ball vs bottom
@@ -319,7 +319,7 @@ class GameStateRunning(object):
             for x in range(ball_grid_x - 1, ball_grid_x + 2):
                 if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
                     if self.blocks[y][x] is not None and not self.blocks[y][x].dead and \
-                            pygame.sprite.collide_rect(self.blocks[y][x], self.ball):
+                            sprite.collide_rect(self.blocks[y][x], self.ball):
                         self.block_destruction(self.blocks[y][x],
                                                self.items[y][x], self.blocks[y][x].on_collide)
 
@@ -331,7 +331,7 @@ class GameStateRunning(object):
         for entity in self.entities:
             if not entity.dead:
                 # paddle vs items
-                if isinstance(entity, Item) and pygame.sprite.collide_rect(self.paddle, entity):
+                if isinstance(entity, Item) and sprite.collide_rect(self.paddle, entity):
                     entity.on_collect(self.paddle)
                     entity.dead = True
                     # self.player.lives += 1
@@ -356,7 +356,7 @@ class GameStateRunning(object):
                         for x in xrange(entity_block_x - 1, entity_block_x + 2):
                             if 0 <= x < BLOCK_NUM_WIDTH and 0 <= y < BLOCK_NUM_HEIGHT:
                                 if self.blocks[y][x] is not None and not self.blocks[y][x].dead \
-                                        and pygame.sprite.collide_rect(self.blocks[y][x], entity):
+                                        and sprite.collide_rect(self.blocks[y][x], entity):
                                     self.block_destruction(self.blocks[y][x], self.items[y][x],
                                                            self.blocks[y][x].on_collide)
                                     entity.on_collide()

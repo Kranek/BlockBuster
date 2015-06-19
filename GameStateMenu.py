@@ -2,7 +2,7 @@
 This file contains the Main Menu GameState
 """
 import sys
-import pygame
+from pygame import draw
 from pygame.locals import QUIT, KEYUP, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN
 from gamedata import Assets
 from GameStateRunning import GameStateRunning
@@ -95,7 +95,7 @@ class GameStateMenu(object):
                 used_color = MENU_COLORS[1]
             else:
                 used_color = MENU_COLORS[0]
-            pygame.draw.rect(self.screen, used_color, (x, y + counter * height, width, height), 0)
+            draw.rect(self.screen, used_color, (x, y + counter * height, width, height), 0)
             option_x = x + MENU_PADDING[0] + (o_max_width - option.get_rect().width) / 2
             self.screen.blit(option, (option_x, y + height * counter + MENU_PADDING[1]))
             counter += 1

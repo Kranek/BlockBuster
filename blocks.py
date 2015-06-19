@@ -1,11 +1,11 @@
 """
 This file contains block variants used in the BlockBuster
 """
-import pygame
+from pygame.sprite import Sprite
 from gamedata import Assets
 
 
-class Block(pygame.sprite.Sprite):
+class Block(Sprite):
     """
     Basic block type
     """
@@ -20,7 +20,7 @@ class Block(pygame.sprite.Sprite):
         :param color: block color number (0-5)
         :return:
         """
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.type = color
         self.image = Assets.blocks[color]  # pygame.image.load("gfx/brick05.png")
         self.rect = self.image.get_rect()

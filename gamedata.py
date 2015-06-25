@@ -66,6 +66,7 @@ class Assets(object):
         Assets.itemExpand = image.load("gfx/itemExpand.png")
         Assets.itemShrink = image.load("gfx/itemShrink.png")
         Assets.itemNano = image.load("gfx/itemNano.png")
+        Assets.itemAddBlocks = image.load("gfx/itemAddBlocks.png")
 
         Assets.explosion = image.load("gfx/explosion.png")
         Assets.editor_cursor_block = image.load("gfx/editor_cursor_block.png")

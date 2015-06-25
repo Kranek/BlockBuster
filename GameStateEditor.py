@@ -1,14 +1,14 @@
 """
 This file contains Level Editor GameState
 """
-from sys import exit
+import sys
 # import pygame
 from pygame.locals import QUIT, MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP, KEYDOWN, K_ESCAPE,\
     K_MINUS, K_KP_MINUS, K_EQUALS, K_KP_PLUS, K_0, K_KP0, K_F5, K_F9
 from gamedata import Assets
 from blocks import Block
 from constants import WINDOW_HEIGHT, BLOCK_NUM_WIDTH, BLOCK_NUM_HEIGHT, MB_LEFT, MB_RIGHT,\
-    MB_WHEEL_UP, MB_WHEEL_DOWN, LEVEL_WIDTH, PLAYFIELD_PADDING
+    MB_WHEEL_UP, MB_WHEEL_DOWN, MB_MIDDLE, LEVEL_WIDTH, PLAYFIELD_PADDING
 # from GameStateMenu import *
 from LevelLoader import LevelLoader
 from tkFileDialog import askopenfilename, asksaveasfilename
@@ -60,7 +60,8 @@ class GameStateEditor(object):
             "Current block:              +/-/mouse wheel to change block type, 0 to reset",
             1, (255, 255, 255))
         self.label_help_top = self.font.render(
-            "Esc - Back to menu, F5 - Save, F9 - Load", 1, (255, 255, 255))
+            "Esc - Back to menu, F5 - Save, F9 - Load, RMB - Remove block, MMB - Pick block",
+            1, (255, 255, 255))
         # print sorted(self.block_types.keys())
 
     def handle_input(self, events):
@@ -71,7 +72,7 @@ class GameStateEditor(object):
         """
         for event in events:
             if event.type == QUIT:
-                exit(0)
+                sys.exit(0)
 
             elif event.type == MOUSEMOTION:
                 if self.is_in_bounds(event.pos):
@@ -91,6 +92,9 @@ class GameStateEditor(object):
                         self.erase_block()
                     self.mode_erase = True
                     self.mode_paint = False
+                elif event.button == MB_MIDDLE:
+                    if self.is_in_bounds(event.pos):
+                        self.pick_block()
                 elif event.button == MB_WHEEL_DOWN:
                     self.next_block_type()
                 elif event.button == MB_WHEEL_UP:
@@ -183,6 +187,15 @@ class GameStateEditor(object):
         :return:
         """
         self.blocks[self.editor_cursor_position[1]][self.editor_cursor_position[0]] = '0'
+
+    def pick_block(self):
+        """
+        Helper function that gets the block from the current Editor Cursor Block position
+        :return:
+        """
+        current_block = self.blocks[self.editor_cursor_position[1]][self.editor_cursor_position[0]]
+        if current_block in self.available_block_types:
+            self.current_block_type = self.available_block_types.index(current_block)
 
     @staticmethod
     def position_screen_to_grid(vec):

@@ -3,10 +3,11 @@ This file contains the Main Menu GameState
 """
 import sys
 from pygame import draw
-from pygame.locals import QUIT, KEYUP, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN
+from pygame.locals import QUIT, KEYUP, K_UP, K_DOWN, K_RETURN
 from gamedata import Assets
 from GameStateRunning import GameStateRunning
 from GameStateEditor import GameStateEditor
+from GameStateRunningMulti import GameStateRunningMulti
 from constants import MENU_COLORS, MENU_PADDING, LEVEL_WIDTH, LEVEL_HEIGHT
 
 
@@ -32,7 +33,7 @@ class GameStateMenu(object):
         self.menu_options = []
         self.font = Assets.menu_font  # trust me, it's in here
         self.menu_options.append(self.font.render("NEW GAME", 1, (255, 255, 255)))
-        # self.menu_options.append(self.font.render("OPTIONS", 1, (255, 255, 255)))
+        self.menu_options.append(self.font.render("MULTIPLAYER", 1, (255, 255, 255)))
         self.menu_options.append(self.font.render("EDITOR", 1, (255, 255, 255)))
         self.menu_options.append(self.font.render("EXIT", 1, (255, 255, 255)))
         self.title = Assets.title_font.render("BlockBuster", 1, (255, 255, 255))
@@ -64,14 +65,13 @@ class GameStateMenu(object):
                         # pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
                         # self.parent.gamestate = GameStateRunning(self.parent)
                         # control_set = (K_a, K_w, K_d)
-                        control_set = (K_LEFT, K_UP, K_RIGHT)
-                        self.context["gamestate"] = GameStateRunning(self.context, self.screen,
-                                                                     self, (0, 0), control_set, 0)
+                        # control_set = (K_LEFT, K_UP, K_RIGHT)
+                        self.context["gamestate"] = GameStateRunning(self.context, self.screen, self)
                     elif self.menu_option == 1:
-                        # elif self.menu_option == 2:
-                        self.context["gamestate"] = GameStateEditor(self.context, self.screen, self)
+                        self.context["gamestate"] = GameStateRunningMulti(self.context, self.screen, self)
                     elif self.menu_option == 2:
-                        # elif self.menu_option == 3:
+                        self.context["gamestate"] = GameStateEditor(self.context, self.screen, self)
+                    elif self.menu_option == 3:
                         sys.exit(0)
                     else:
                         pass

@@ -58,6 +58,7 @@ class Projectile(Sprite):
             # temp = obj.on_collide()
             # if self.owner is not None:
             #     self.owner.score += temp
+            _ = obj
             self.dead = True
 
     # def check_collision(self):

@@ -6,7 +6,7 @@ from gameclock import GameClock
 from pygame import init
 from pygame.display import set_caption, set_icon, set_mode, get_surface, flip
 from pygame.event import get
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from constants import LEVEL_WIDTH, LEVEL_HEIGHT
 from GameStateMenu import GameStateMenu
 import Tkinter as Tk
 
@@ -20,7 +20,8 @@ if __name__ == '__main__':
     GAME_ICON = Assets.gameIcon
     set_caption('BlockBuster')
     set_icon(GAME_ICON)
-    WINDOW = set_mode((WINDOW_WIDTH/2, WINDOW_HEIGHT))
+    # WINDOW = set_mode((LEVEL_WIDTH, LEVEL_HEIGHT))
+    set_mode((LEVEL_WIDTH, LEVEL_HEIGHT))
 
     SCREEN = get_surface()
     flip()

@@ -21,7 +21,7 @@ class Item(Sprite):
         :return:
         """
         Sprite.__init__(self)
-        self.speed = 2
+        self.speed = 3
         self.image = Assets.item
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -186,3 +186,105 @@ class ItemPaddleNano(Item):
         :return:
         """
         paddle.change_size(PADDLE_WIDTHS[0])
+
+
+class ItemShrinkMulti(Item):
+    """
+    Shrink Paddle Item. Shrinks the enemy paddle using the predefined widths
+    """
+    def __init__(self, x, y, level):
+        """
+        Initialize it with spawn position
+        :param x: x coordinate of the play-field
+        :param y: y coordinate of the play-field
+        :return:
+        """
+        Item.__init__(self, x, y)
+        # super(ItemShrink, self).__init__(x, y)
+        self.image = Assets.itemShrink
+        self.level = level
+
+    def affect(self, paddle):
+        """
+        Method called to manifest item effect
+        :param paddle: target of the effect
+        :return:
+        """
+        size = len(PADDLE_WIDTHS)
+        for i in xrange(size-1, -1, -1):
+            if paddle.rect.width >= PADDLE_WIDTHS[i] and i > 0:
+                paddle.change_size(PADDLE_WIDTHS[i-1])
+                return
+
+    def on_collect(self, paddle):
+        """
+        Method called on collision with the Paddle
+        :param paddle: Paddle with which the item collided
+        :return:
+        """
+        self.level.disturb_player(self.affect, self.level.player_color)
+
+
+class ItemPaddleNanoMulti(Item):
+    """
+    Nano Paddle Item. Shrinks the enemy paddle to the minimum permitted width
+    """
+    def __init__(self, x, y, level):
+        """
+        Initialize it with spawn position
+        :param x: x coordinate of the play-field
+        :param y: y coordinate of the play-field
+        :return:
+        """
+        Item.__init__(self, x, y)
+        # super(ItemPaddleNano, self).__init__(x, y)
+        self.image = Assets.itemNano
+        self.level = level
+
+    def affect(self, paddle):
+        """
+        Method called to manifest item effect
+        :param paddle: target of the effect
+        :return:
+        """
+        paddle.change_size(PADDLE_WIDTHS[0])
+
+    def on_collect(self, paddle):
+        """
+        Method called on collision with the Paddle
+        :param paddle: Paddle with which the item collided
+        :return:
+        """
+        self.level.disturb_player(self.affect, self.level.player_color)
+
+class ItemAddBlocks(Item):
+    """
+    Add Blocks Item. Places additional blocks into enemy's game
+    """
+    def __init__(self, x, y, level):
+        """
+        Initialize it with spawn position
+        :param x: x coordinate of the play-field
+        :param y: y coordinate of the play-field
+        :return:
+        """
+        Item.__init__(self, x, y)
+        # super(ItemPaddleNano, self).__init__(x, y)
+        self.image = Assets.itemAddBlocks
+        self.level = level
+
+    def affect(self, level):
+        """
+        Method called to manifest item effect
+        :param paddle: target of the effect
+        :return:
+        """
+        level.place_random_blocks()
+
+    def on_collect(self, paddle):
+        """
+        Method called on collision with the Paddle
+        :param paddle: Paddle with which the item collided
+        :return:
+        """
+        self.level.disturb_player(self.affect, self.level.player_color, True)

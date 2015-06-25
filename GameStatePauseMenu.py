@@ -1,9 +1,10 @@
 """
 This file contains the Pause Menu GameState
 """
-from sys import exit
+import sys
 from pygame import draw, Surface
 from pygame.locals import QUIT, KEYUP, KEYDOWN, K_UP, K_DOWN, K_RETURN, K_ESCAPE
+from pygame.display import set_mode
 from gamedata import Assets
 from constants import MENU_COLORS, MENU_PADDING, LEVEL_WIDTH, LEVEL_HEIGHT
 
@@ -12,7 +13,7 @@ class GameStatePauseMenu(object):
     """
     Pause Menu GameState. Available in Running GameState by pressing Esc
     """
-    def __init__(self, context, screen, prev_state):
+    def __init__(self, context, screen, prev_state, scaled_width):
         """
         Init with context, main PyGame surface and the previous state
         if you want to be able to go back
@@ -21,6 +22,7 @@ class GameStatePauseMenu(object):
         Used by the current state to switch to the other GameState
         :param screen: Main PyGame surface to draw the objects/UI on
         :param prev_state: The state to which we will return
+        :param scaled_width: Width to be used in drawing
         :return:
         """
         self.context = context
@@ -33,6 +35,7 @@ class GameStatePauseMenu(object):
         self.menu_options.append(self.font.render("EXIT TO MENU", 1, (255, 255, 255)))
         self.overlay_drawn = False
         self.prev_state = prev_state
+        self.scaled_width = scaled_width
 
     def handle_input(self, events):
         """
@@ -42,7 +45,7 @@ class GameStatePauseMenu(object):
         """
         for event in events:
             if event.type == QUIT:
-                exit(0)
+                sys.exit(0)
 
             elif event.type == KEYUP:
                 if event.key == K_UP:
@@ -59,9 +62,10 @@ class GameStatePauseMenu(object):
                     if self.menu_option == 0:
                         self.context["gamestate"] = self.prev_state
                     elif self.menu_option == 1:
-                        self.prev_state.start_level(self.prev_state.level_number)
+                        self.prev_state.restart_level()
                         self.context["gamestate"] = self.prev_state
                     elif self.menu_option == 2:
+                        set_mode((LEVEL_WIDTH, LEVEL_HEIGHT))
                         self.context["gamestate"] = self.prev_state.prev_state
 
             elif event.type == KEYDOWN:
@@ -74,7 +78,7 @@ class GameStatePauseMenu(object):
         :return:
         """
         if not self.overlay_drawn:
-            overlay = Surface((LEVEL_WIDTH, LEVEL_HEIGHT))
+            overlay = Surface((self.scaled_width, LEVEL_HEIGHT))
             overlay.set_alpha(128)
             overlay.fill((0, 0, 0))
             self.overlay_drawn = True
@@ -83,7 +87,7 @@ class GameStatePauseMenu(object):
         o_max_width = max([option.get_rect().width for option in self.menu_options])
         width = o_max_width + MENU_PADDING[0] * 2
         height = self.menu_options[0].get_rect().height + MENU_PADDING[1] * 2
-        x = LEVEL_WIDTH / 2 - width / 2
+        x = self.scaled_width / 2 - width / 2
         y = LEVEL_HEIGHT / 2 - (height * len(self.menu_options)) / 2
         counter = 0
         for option in self.menu_options:

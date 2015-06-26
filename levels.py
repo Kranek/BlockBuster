@@ -2,7 +2,7 @@
 This file contains Level class, which stores most of the gameplay-related objects and logic
 """
 from pygame import sprite, draw, Surface, SRCALPHA
-from pygame.locals import KEYDOWN, KEYUP, K_EQUALS
+from pygame.locals import KEYDOWN, KEYUP, K_EQUALS, K_1, K_2, K_3, K_4, K_5, K_6, K_SPACE
 # K_SPACE, K_1, K_2, K_3, K_4
 from Player import Player
 from paddle import Paddle
@@ -63,6 +63,8 @@ class Level(object):
         :param events: input events from the main app
         :return:
         """
+        BONUS_SPAWN_X = 305
+        BONUS_SPAWN_Y = 200
         for event in events:
             if event.type == KEYDOWN:
                 if event.key == self.control_set[0]:
@@ -77,18 +79,30 @@ class Level(object):
 
                 # elif event.key == K_SPACE:
                 #     self.paddle.change_size(self.paddle.rect.width+10)
-                #
-                # elif event.key == K_1:
-                #     self.add_entity(ItemExpand(200, 200))
-                #
-                # elif event.key == K_2:
-                #     self.add_entity(ItemShrink(200, 200))
-                #
-                # elif event.key == K_3:
-                #     self.add_entity(ItemLaserGun(200, 200))
-                #
-                # elif event.key == K_4:
-                #     self.add_entity(ItemPaddleNano(200, 200))
+
+                elif event.key == K_1:
+                    # self.add_entity(ItemExpand(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 1)
+
+                elif event.key == K_2:
+                    # self.add_entity(ItemLaserGun(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 2)
+
+                elif event.key == K_3:
+                    # self.add_entity(ItemShrink(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 3)
+
+                elif event.key == K_4:
+                    # self.add_entity(ItemPaddleNano(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 4)
+
+                elif event.key == K_5:
+                    # self.add_entity(ItemLife(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 5)
+
+                elif event.key == K_6:
+                    # self.add_entity(ItemLife(BONUS_SPAWN_X, BONUS_SPAWN_Y))
+                    self.spawn_item(BONUS_SPAWN_X, BONUS_SPAWN_Y, 6)
 
             elif event.type == KEYUP:
                 if event.key == self.control_set[0]:
@@ -199,6 +213,16 @@ class Level(object):
         """
         if item == 1:
             self.add_entity(ItemLife(x, y))
+        elif item == 2:
+            self.add_entity(ItemExpand(x, y))
+        elif item == 3:
+            self.add_entity(ItemShrink(x, y))
+        elif item == 4:
+            self.add_entity(ItemLaserGun(x, y))
+        elif item == 5:
+            self.add_entity(ItemPaddleNano(x, y))
+        elif item == 6:
+            pass
         elif randint(0, 35) == 0:
             item_type = randint(0, 4)
             if item_type == 0:
@@ -424,6 +448,16 @@ class LevelMulti(Level):
         """
         if item == 1:
             self.add_entity(ItemLife(x, y))
+        elif item == 2:
+            self.add_entity(ItemExpand(x, y))
+        elif item == 3:
+            self.add_entity(ItemShrinkMulti(x, y, self))
+        elif item == 4:
+            self.add_entity(ItemLaserGun(x, y))
+        elif item == 5:
+            self.add_entity(ItemPaddleNanoMulti(x, y, self))
+        elif item == 6:
+            self.add_entity(ItemAddBlocks(x, y, self))
         elif randint(0, 25) == 0:
             item_type = randint(0, 5)
             if item_type == 0:

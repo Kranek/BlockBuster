@@ -97,7 +97,7 @@ class Paddle(Sprite):
         self.attachment_points[1] = (self.rect.width-8, 0)
         # self.paddle.attachment_points[1] =
 
-        if self.rect.x <= 0:
+        if self.rect.x <= PLAYFIELD_PADDING[0]:
             self.rect.x = PLAYFIELD_PADDING[0] + 1
         elif self.rect.x + self.rect.width >= LEVEL_WIDTH - PLAYFIELD_PADDING[0]:
             self.rect.x = LEVEL_WIDTH - PLAYFIELD_PADDING[0] - self.rect.width - 1
